@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  password        String
+  name            String
+  bio             String?
+  avatar          String?
+  age             Int?
+  location        String?
+  interests       UserInterest[]
+  groups          GroupMember[]
+  messages        Message[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Interest {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  category    String
+  users       UserInterest[]
+  groups      GroupInterest[]
+}
+
+model UserInterest {
+  userId      String
+  interestId  String
+  user        User      @relation(fields: [userId], references: [id])
+  interest    Interest  @relation(fields: [interestId], references: [id])
+  
+  @@id([userId, interestId])
+}
+
+model Group {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  maxMembers  Int       @default(6)
+  isActive    Boolean   @default(true)
+  members     GroupMember[]
+  messages    Message[]
+  interests   GroupInterest[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model GroupMember {
+  userId      String
+  groupId     String
+  joinedAt    DateTime  @default(now())
+  role        String    @default("member")
+  user        User      @relation(fields: [userId], references: [id])
+  group       Group     @relation(fields: [groupId], references: [id])
+  
+  @@id([userId, groupId])
+}
+
+model GroupInterest {
+  groupId     String
+  interestId  String
+  group       Group     @relation(fields: [groupId], references: [id])
+  interest    Interest  @relation(fields: [interestId], references: [id])
+  
+  @@id([groupId, interestId])
+}
+
+model Message {
+  id          String    @id @default(cuid())
+  content     String
+  userId      String
+  groupId     String
+  user        User      @relation(fields: [userId], references: [id])
+  group       Group     @relation(fields: [groupId], references: [id])
+  createdAt   DateTime  @default(now())
+}
