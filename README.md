@@ -279,7 +279,9 @@ npm install
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 👥 contact
+## 👥 Contact
 
-- **Neha Thottathil** - Creator and Developer
+- **Author**: Neha Thottathil
+- **Email**: nthottathil@live.co.uk
+- **GitHub**: [@nthottathil](https://github.com/nthottathil)
 
